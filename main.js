@@ -1,317 +1,276 @@
-/**
- * main.js — ROOMIES Landing Page
- * FIX: fade-up ahora usa .will-animate aplicado por JS DESPUÉS de cargar.
- * Esto garantiza que si el JS falla o tarda, el contenido igual es visible.
- */
-
 document.addEventListener("DOMContentLoaded", () => {
 
-  /* ============================================================
-     1. CUSTOM CURSOR
-  ============================================================ */
-  const cursor         = document.getElementById("cursor");
-  const cursorFollower = document.getElementById("cursorFollower");
+  /* ══════════════════════════════════════════
+     1. CURSOR CUSTOM
+  ══════════════════════════════════════════ */
+  const cursor   = document.getElementById("cursor");
+  const follower = document.getElementById("cursorFollower");
+  const isTouch  = "ontouchstart" in window || navigator.maxTouchPoints > 0;
 
-  if (cursor && cursorFollower && window.matchMedia("(pointer: fine)").matches) {
-    let mouseX = 0, mouseY = 0;
-    let followerX = 0, followerY = 0;
+  if (!isTouch && cursor && follower) {
+    document.body.classList.add("custom-cursor-active");
 
-    document.addEventListener("mousemove", (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-      cursor.style.left = mouseX + "px";
-      cursor.style.top  = mouseY + "px";
-    }, { passive: true });
+    let mx = -200, my = -200;
+    let fx = -200, fy = -200;
+    let firstMove = true;
 
-    function animateFollower() {
-      followerX += (mouseX - followerX) * 0.1;
-      followerY += (mouseY - followerY) * 0.1;
-      cursorFollower.style.left = followerX + "px";
-      cursorFollower.style.top  = followerY + "px";
-      requestAnimationFrame(animateFollower);
-    }
-    animateFollower();
+    document.addEventListener("mousemove", e => {
+      mx = e.clientX;
+      my = e.clientY;
+      cursor.style.left = mx + "px";
+      cursor.style.top  = my + "px";
 
-    const hoverTargets = document.querySelectorAll("a, button, .gallery-item, .method-card, .pricing-card");
-    hoverTargets.forEach(el => {
-      el.addEventListener("mouseenter", () => cursorFollower.classList.add("is-hovering"));
-      el.addEventListener("mouseleave", () => cursorFollower.classList.remove("is-hovering"));
+      if (firstMove) {
+        fx = mx; fy = my;
+        firstMove = false;
+        cursor.style.opacity  = "1";
+        follower.style.opacity = "1";
+      }
     });
 
-    document.addEventListener("mouseleave", () => {
-      cursor.style.opacity = "0";
-      cursorFollower.style.opacity = "0";
+    (function animFollower() {
+      fx += (mx - fx) * 0.13;
+      fy += (my - fy) * 0.13;
+      follower.style.left = Math.round(fx) + "px";
+      follower.style.top  = Math.round(fy) + "px";
+      requestAnimationFrame(animFollower);
+    })();
+
+    document.querySelectorAll("a, button, .gallery-item, .method-card, .pricing-card").forEach(el => {
+      el.addEventListener("mouseenter", () => follower.classList.add("is-hovering"));
+      el.addEventListener("mouseleave", () => follower.classList.remove("is-hovering"));
     });
-    document.addEventListener("mouseenter", () => {
-      cursor.style.opacity = "1";
-      cursorFollower.style.opacity = "1";
-    });
+
+    document.addEventListener("mouseleave", () => { cursor.style.opacity = "0"; follower.style.opacity = "0"; });
+    document.addEventListener("mouseenter", () => { if (!firstMove) { cursor.style.opacity = "1"; follower.style.opacity = "1"; } });
   } else {
     cursor?.remove();
-    cursorFollower?.remove();
+    follower?.remove();
   }
 
-  /* ============================================================
-     2. NAVBAR SCROLL
-  ============================================================ */
+
+  /* ══════════════════════════════════════════
+     2. NAVBAR — transparente → sólido al scroll
+  ══════════════════════════════════════════ */
   const navbar = document.getElementById("navbar");
-
   if (navbar) {
-    const handleScroll = () => {
-      navbar.classList.toggle("scrolled", window.scrollY > 40);
+    const checkScroll = () => {
+      navbar.classList.toggle("scrolled", window.scrollY > 50);
     };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
+    window.addEventListener("scroll", checkScroll, { passive: true });
+    checkScroll();
   }
 
-  /* ============================================================
+
+  /* ══════════════════════════════════════════
      3. MOBILE MENU
-  ============================================================ */
+  ══════════════════════════════════════════ */
   const mobileBtn  = document.getElementById("mobileMenuBtn");
   const mobileMenu = document.getElementById("mobileMenu");
-
   if (mobileBtn && mobileMenu) {
     mobileBtn.addEventListener("click", () => {
-      const isOpen = mobileMenu.classList.toggle("active");
-      mobileBtn.setAttribute("aria-expanded", String(isOpen));
+      const open = mobileMenu.classList.toggle("active");
+      mobileBtn.setAttribute("aria-expanded", String(open));
     });
-
-    mobileMenu.querySelectorAll("a").forEach(link => {
-      link.addEventListener("click", () => {
+    mobileMenu.querySelectorAll("a").forEach(a => {
+      a.addEventListener("click", () => {
         mobileMenu.classList.remove("active");
         mobileBtn.setAttribute("aria-expanded", "false");
       });
     });
   }
 
-  /* ============================================================
-     4. FADE-UP — FIX CRÍTICO
-     
-     El problema anterior: .fade-up empezaba con opacity:0 en CSS.
-     Si IntersectionObserver tardaba o fallaba, el contenido quedaba
-     invisible para siempre.
-     
-     Solución: el CSS tiene .fade-up con opacity:1 por defecto.
-     El JS agrega .will-animate (que pone opacity:0) SOLO a los
-     elementos que NO están en el viewport al cargar.
-     Luego el observer agrega .visible cuando entran en viewport.
-     
-     El hero (que siempre está visible al cargar) recibe .visible
-     inmediatamente sin necesitar scroll.
-  ============================================================ */
+
+  /* ══════════════════════════════════════════
+     4. FADE-UP — visible por defecto en CSS,
+        JS aplica will-animate solo si está
+        fuera del viewport al cargar.
+  ══════════════════════════════════════════ */
   const fadeEls = document.querySelectorAll(".fade-up");
-
-  if (fadeEls.length > 0 && "IntersectionObserver" in window) {
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-            entry.target.classList.remove("will-animate");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.08, rootMargin: "0px 0px -30px 0px" }
-    );
+  if (fadeEls.length && "IntersectionObserver" in window) {
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add("visible");
+          e.target.classList.remove("will-animate");
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: "0px 0px -30px 0px" });
 
     fadeEls.forEach(el => {
-      // Verificar si el elemento ya está visible en el viewport
-      const rect = el.getBoundingClientRect();
-      const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
-
-      if (isInViewport) {
-        // Ya visible: animar con un pequeño delay para el efecto de entrada
+      const r = el.getBoundingClientRect();
+      if (r.top < window.innerHeight && r.bottom > 0) {
         el.classList.add("will-animate");
-        setTimeout(() => {
-          el.classList.add("visible");
-          el.classList.remove("will-animate");
-        }, 80);
+        setTimeout(() => { el.classList.add("visible"); el.classList.remove("will-animate"); }, 100);
       } else {
-        // Fuera del viewport: preparar para animar al hacer scroll
         el.classList.add("will-animate");
-        observer.observe(el);
+        io.observe(el);
       }
     });
   }
-  // Si IntersectionObserver no está disponible: los elementos quedan
-  // visibles (opacity:1) gracias al CSS base. No pasa nada.
 
-  /* ============================================================
-     5. COUNTER ANIMATION
-  ============================================================ */
+
+  /* ══════════════════════════════════════════
+     5. COUNTERS — anima números del hero
+  ══════════════════════════════════════════ */
   const counters = document.querySelectorAll(".hero-stat__number[data-count]");
+  if (counters.length) {
+    const ease = t => 1 - Math.pow(1 - t, 4);
 
-  if (counters.length > 0) {
-    const easeOutQuart = (t) => 1 - Math.pow(1 - t, 4);
-
-    function animateCounter(el, target, duration = 1600) {
-      const start = performance.now();
-      const step = (now) => {
-        const elapsed  = now - start;
-        const progress = Math.min(elapsed / duration, 1);
-        const current  = Math.round(easeOutQuart(progress) * target);
-        el.textContent = current.toLocaleString("es-AR");
-        if (progress < 1) requestAnimationFrame(step);
-      };
-      requestAnimationFrame(step);
+    function animCount(el, target) {
+      if (el.dataset.animated) return;
+      el.dataset.animated = "1";
+      const t0 = performance.now();
+      const dur = 1800;
+      (function step(now) {
+        const p = Math.min((now - t0) / dur, 1);
+        el.textContent = Math.round(ease(p) * target).toLocaleString("es-AR");
+        if (p < 1) requestAnimationFrame(step);
+      })(t0);
     }
 
-    const counterObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const el = entry.target;
-            animateCounter(el, parseInt(el.dataset.count, 10));
-            counterObserver.unobserve(el);
-          }
-        });
-      },
-      { threshold: 0.5 }
-    );
+    // Animar los que ya están visibles al cargar
+    setTimeout(() => {
+      counters.forEach(el => {
+        const r = el.getBoundingClientRect();
+        if (r.top < window.innerHeight) animCount(el, +el.dataset.count);
+      });
+    }, 400);
 
-    counters.forEach(el => counterObserver.observe(el));
+    // Animar los que aparecen al scroll
+    const cio = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { animCount(e.target, +e.target.dataset.count); cio.unobserve(e.target); } });
+    }, { threshold: 0.1 });
+    counters.forEach(el => { if (!el.dataset.animated) cio.observe(el); });
   }
 
-  /* ============================================================
-     6. 3D TILT + GLOW EN CARDS
-  ============================================================ */
-  const SELECTORS = ".method-card, .pricing-card, .result-card, .service-row, .comparison-card";
-  const tiltCards = document.querySelectorAll(SELECTORS);
 
-  const TILT_MAX   = 8;
-  const TILT_SCALE = 1.018;
-  const TILT_LIFT  = -5;
+  /* ══════════════════════════════════════════
+     6. TILT 3D EN CARDS
+     
+     CÓMO FUNCIONA:
+     - perspective:1000px está en el GRID PADRE (CSS)
+     - Las cards usan solo rotateX/Y (sin perspective())
+     - Sin overflow:hidden, sin will-change, sin transform-style
+       en el CSS de la card — nada que cree stacking context
+     - El transform se aplica directo via JS con RAF + lerp
+  ══════════════════════════════════════════ */
+  document.querySelectorAll(".method-card, .pricing-card").forEach(card => {
+    const featured = card.classList.contains("pricing-card--featured");
+    const glow     = card.querySelector(".card-glow-follow");
 
-  tiltCards.forEach(card => {
-    const glowEl = card.querySelector(".card-glow-follow");
+    let raf  = null;
+    let tx = 0, ty = 0;   // target rotation
+    let cx = 0, cy = 0;   // current rotation (lerped)
+    let on = false;        // hover state
+
+    const lerp = (a, b, f) => a + (b - a) * f;
+
+    function tick() {
+      cx = lerp(cx, tx, 0.14);
+      cy = lerp(cy, ty, 0.14);
+
+      if (!featured) {
+        const sc = on ? 1.03 : 1;
+        const ly = on ? -5   : 0;
+        card.style.transform =
+          `rotateX(${cx.toFixed(3)}deg) rotateY(${cy.toFixed(3)}deg) scale(${sc}) translateY(${ly}px)`;
+      }
+
+      const done = !on && Math.abs(cx) < 0.02 && Math.abs(cy) < 0.02;
+      if (done) {
+        raf = null;
+        if (!featured) card.style.transform = "";
+      } else {
+        raf = requestAnimationFrame(tick);
+      }
+    }
 
     card.addEventListener("mouseenter", () => {
-      card.style.transition = "background var(--t-base), border-color var(--t-base), box-shadow var(--t-base)";
+      on = true;
+      card.style.boxShadow   = "0 16px 50px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.12)";
+      card.style.borderColor = "rgba(255,255,255,0.18)";
+      card.style.background  = "rgba(255,255,255,0.055)";
+      if (!raf) raf = requestAnimationFrame(tick);
     });
 
-    card.addEventListener("mousemove", (e) => {
-      const rect  = card.getBoundingClientRect();
-      const x     = e.clientX - rect.left;
-      const y     = e.clientY - rect.top;
-      const normX = (x / rect.width)  * 2 - 1;
-      const normY = (y / rect.height) * 2 - 1;
-
-      card.style.transform = `
-        perspective(900px)
-        rotateX(${-normY * TILT_MAX}deg)
-        rotateY(${normX  * TILT_MAX}deg)
-        translateY(${TILT_LIFT}px)
-        scale(${TILT_SCALE})
-      `.trim();
-
-      if (glowEl) {
-        glowEl.style.left = x + "px";
-        glowEl.style.top  = y + "px";
+    card.addEventListener("mousemove", e => {
+      if (featured) return;
+      const r  = card.getBoundingClientRect();
+      const nx = ((e.clientX - r.left) / r.width)  * 2 - 1;
+      const ny = ((e.clientY - r.top)  / r.height) * 2 - 1;
+      tx = -ny * 12;
+      ty =  nx * 12;
+      if (glow) {
+        glow.style.left    = (e.clientX - r.left) + "px";
+        glow.style.top     = (e.clientY - r.top)  + "px";
+        glow.style.opacity = "1";
       }
+      if (!raf) raf = requestAnimationFrame(tick);
     });
 
     card.addEventListener("mouseleave", () => {
-      card.style.transition = "transform 0.55s var(--ease-out-expo), background var(--t-base), border-color var(--t-base), box-shadow var(--t-base)";
-      card.style.transform  = "perspective(900px) rotateX(0) rotateY(0) translateY(0) scale(1)";
+      on = false;
+      tx = 0; ty = 0;
+      card.style.boxShadow   = "";
+      card.style.borderColor = "";
+      card.style.background  = "";
+      if (glow) glow.style.opacity = "0";
+      if (!raf) raf = requestAnimationFrame(tick);
     });
   });
 
-  // Card featured: solo glow, sin tilt
-  const featuredCard = document.querySelector(".pricing-card--featured");
-  if (featuredCard) {
-    featuredCard.addEventListener("mouseenter", () => {
-      featuredCard.style.transition = "background var(--t-base), border-color var(--t-base), box-shadow var(--t-base)";
-    });
-    featuredCard.addEventListener("mousemove", (e) => {
-      const rect   = featuredCard.getBoundingClientRect();
-      const glowEl = featuredCard.querySelector(".card-glow-follow");
-      if (glowEl) {
-        glowEl.style.left = (e.clientX - rect.left) + "px";
-        glowEl.style.top  = (e.clientY - rect.top)  + "px";
-      }
-      featuredCard.style.transform = "translateY(-12px) scale(1.02)";
-    });
-    featuredCard.addEventListener("mouseleave", () => {
-      featuredCard.style.transition = "transform 0.55s var(--ease-out-expo), background var(--t-base), border-color var(--t-base), box-shadow var(--t-base)";
-      featuredCard.style.transform  = "translateY(-12px) scale(1.02)";
-    });
-  }
 
-  /* ============================================================
+  /* ══════════════════════════════════════════
      7. LIGHTBOX
-  ============================================================ */
-  const lightbox    = document.getElementById("lightbox");
-  const lightboxImg = document.getElementById("lightbox-img");
-  const closeBtn    = document.querySelector(".lightbox-close");
-  const prevBtn     = document.querySelector(".lightbox-nav.prev");
-  const nextBtn     = document.querySelector(".lightbox-nav.next");
+  ══════════════════════════════════════════ */
+  const lb       = document.getElementById("lightbox");
+  const lbImg    = document.getElementById("lightbox-img");
+  const lbClose  = document.querySelector(".lightbox-close");
+  const lbPrev   = document.querySelector(".lightbox-nav.prev");
+  const lbNext   = document.querySelector(".lightbox-nav.next");
+  const gItems   = document.querySelectorAll(".gallery-item");
+  const gImgs    = document.querySelectorAll(".gallery-item img");
+  let   lbIdx    = 0;
 
-  const galleryItems  = document.querySelectorAll(".gallery-item");
-  const galleryImages = document.querySelectorAll(".gallery-item img");
-
-  let currentIndex = 0;
-
-  function openLightbox(index) {
-    if (!lightbox || galleryImages.length === 0) return;
-    currentIndex = index;
-    setLightboxImage(currentIndex);
-    lightbox.classList.add("active");
-    void lightbox.offsetWidth;
-    lightbox.classList.add("visible");
-    closeBtn?.focus();
+  function openLb(i) {
+    if (!lb || !gImgs.length) return;
+    lbIdx = i;
+    setLbImg(i);
+    lb.classList.add("active");
+    void lb.offsetWidth;
+    lb.classList.add("visible");
+    lbClose?.focus();
     document.body.style.overflow = "hidden";
   }
-
-  function closeLightbox() {
-    if (!lightbox) return;
-    lightbox.classList.remove("visible");
-    lightbox.addEventListener("transitionend", () => {
-      lightbox.classList.remove("active");
-    }, { once: true });
+  function closeLb() {
+    if (!lb) return;
+    lb.classList.remove("visible");
+    lb.addEventListener("transitionend", () => lb.classList.remove("active"), { once: true });
     document.body.style.overflow = "";
   }
-
-  function setLightboxImage(index) {
-    if (!galleryImages[index] || !lightboxImg) return;
-    const src = galleryImages[index].src;
-    if (!src) return;
-    lightboxImg.style.opacity   = "0.2";
-    lightboxImg.style.transform = "scale(0.94)";
-    lightboxImg.src = src;
-    lightboxImg.alt = galleryImages[index].alt || `Evento ${index + 1}`;
-    requestAnimationFrame(() => {
-      lightboxImg.style.opacity   = "1";
-      lightboxImg.style.transform = "scale(1)";
-    });
+  function setLbImg(i) {
+    if (!gImgs[i] || !lbImg) return;
+    lbImg.style.opacity = "0.2"; lbImg.style.transform = "scale(0.94)";
+    lbImg.src = gImgs[i].src; lbImg.alt = gImgs[i].alt || `Evento ${i+1}`;
+    requestAnimationFrame(() => { lbImg.style.opacity = "1"; lbImg.style.transform = "scale(1)"; });
   }
 
-  galleryItems.forEach((item, index) => {
-    item.setAttribute("tabindex", "0");
-    item.setAttribute("role", "button");
-    item.addEventListener("click", () => openLightbox(index));
-    item.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        openLightbox(index);
-      }
-    });
+  gItems.forEach((item, i) => {
+    item.setAttribute("tabindex", "0"); item.setAttribute("role", "button");
+    item.addEventListener("click",   () => openLb(i));
+    item.addEventListener("keydown",  e => { if (e.key==="Enter"||e.key===" ") { e.preventDefault(); openLb(i); } });
   });
-
-  closeBtn?.addEventListener("click", closeLightbox);
-  nextBtn?.addEventListener("click", (e) => { e.stopPropagation(); currentIndex = (currentIndex + 1) % galleryImages.length; setLightboxImage(currentIndex); });
-  prevBtn?.addEventListener("click", (e) => { e.stopPropagation(); currentIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length; setLightboxImage(currentIndex); });
-
-  lightbox?.addEventListener("click", (e) => {
-    if (e.target === lightbox) closeLightbox();
-  });
-
-  document.addEventListener("keydown", (e) => {
-    if (!lightbox?.classList.contains("active")) return;
-    if (e.key === "Escape")     closeLightbox();
-    if (e.key === "ArrowRight") { currentIndex = (currentIndex + 1) % galleryImages.length; setLightboxImage(currentIndex); }
-    if (e.key === "ArrowLeft")  { currentIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length; setLightboxImage(currentIndex); }
+  lbClose?.addEventListener("click", closeLb);
+  lbNext?.addEventListener("click",  e => { e.stopPropagation(); lbIdx=(lbIdx+1)%gImgs.length; setLbImg(lbIdx); });
+  lbPrev?.addEventListener("click",  e => { e.stopPropagation(); lbIdx=(lbIdx-1+gImgs.length)%gImgs.length; setLbImg(lbIdx); });
+  lb?.addEventListener("click", e => { if (e.target===lb) closeLb(); });
+  document.addEventListener("keydown", e => {
+    if (!lb?.classList.contains("active")) return;
+    if (e.key==="Escape")     closeLb();
+    if (e.key==="ArrowRight") { lbIdx=(lbIdx+1)%gImgs.length; setLbImg(lbIdx); }
+    if (e.key==="ArrowLeft")  { lbIdx=(lbIdx-1+gImgs.length)%gImgs.length; setLbImg(lbIdx); }
   });
 
 });
