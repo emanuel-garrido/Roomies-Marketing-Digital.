@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ROOMIES | Marketing Worldwide</title>
+  <meta name="description" content="Estrategia, contenido y ejecución para proyectos y negocios con dirección.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="icon" href="assets/roomies-mkt.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-follower" id="cursorFollower"></div>
+  <div class="noise-overlay" aria-hidden="true"></div>
+
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Visor de imagen">
+    <button class="lightbox-close" aria-label="Cerrar">&times;</button>
+    <button class="lightbox-nav prev" aria-label="Anterior">&#10094;</button>
+    <img class="lightbox-img" id="lightbox-img" alt="Imagen del evento">
+    <button class="lightbox-nav next" aria-label="Siguiente">&#10095;</button>
+  </div>
+
+  <nav class="navbar" id="navbar">
+    <div class="container nav-container">
+      <a href="#" class="logo">
+        <img src="assets/roomies-logo-white.png" alt="Roomies Logo">
+      </a>
+      <div class="nav-links">
+        <a href="#method" class="nav-link">Método</a>
+        <a href="#services" class="nav-link">Servicios</a>
+        <a href="#plans" class="nav-link">Planes</a>
+        <a href="#about" class="nav-link">Nosotros</a>
+      </div>
+      <a href="#cta" class="btn btn-primary btn-sm nav-btn">Contactanos</a>
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Abrir menú" aria-expanded="false">
+        <span class="hamburger"><span></span><span></span><span></span></span>
+      </button>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#method">Método</a>
+      <a href="#services">Servicios</a>
+      <a href="#plans">Planes</a>
+      <a href="#about">Nosotros</a>
+      <a href="#cta" class="btn btn-primary">Reservar llamada</a>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- HERO -->
+    <section class="hero" id="hero">
+      <div class="hero-bg" aria-hidden="true">
+        <div class="hero-grid"></div>
+        <div class="hero-glow hero-glow--top"></div>
+        <div class="hero-glow hero-glow--left"></div>
+        <div class="hero-glow hero-glow--right"></div>
+      </div>
+      <div class="container hero-content">
+        <div class="hero-orb-wrapper">
+          <div class="hero-orb">
+            <img src="assets/roomies-by.png" alt="Roomies">
+          </div>
+        </div>
+        <div class="badge fade-up">
+          <span class="badge-dot"></span>
+          Agencia digital estratégica
+        </div>
+        <div class="hero-actions fade-up delay-1">
+          <a href="#about" class="btn btn-primary btn-large">Quiénes somos <i class="ph ph-arrow-right"></i></a>
+          <a href="#method" class="btn btn-ghost btn-large">Nuestro método</a>
+        </div>
+       
+      </div>
+      <div class="scroll-indicator" aria-hidden="true">
+        <span class="scroll-indicator__line"></span>
+      </div>
+    </section>
+
+    <!-- BRAND -->
+    <section class="brand-highlight" aria-hidden="true">
+      <img src="assets/roomies-mkt.png" alt="Marketing by Roomies">
+    </section>
+
+    <!-- TRUST -->
+    <section class="trust" aria-label="Clientes y partners">
+      <div class="trust-header">
+        <p class="trust-title">Soluciones dentro de nuestro ecosistema.</p>
+      </div>
+      <div class="trust-marquee" aria-hidden="true">
+        <div class="trust-track">
+          <img src="assets/IMG_9949.PNG" alt=""><img src="assets/IMG_9950.PNG" alt="">
+          <img src="assets/IMG_9951.PNG" alt=""><img src="assets/IMG_9952.PNG" alt="">
+          <img src="assets/IMG_9953.PNG" alt=""><img src="assets/IMG_9954.PNG" alt="">
+        </div>
+      </div>
+    </section>
+
+    <!-- METHOD -->
+    <section class="method section" id="method">
+      <div class="container">
+        <div class="section-header fade-up">
+          <p class="section-eyebrow">Nuestro método</p>
+          <h2 class="section-title">Nuestro método</h2>
+          <p class="section-subtitle">Tres pasos para construir crecimiento real, sostenido y a medida de tu negocio.</p>
+        </div>
+        <div class="method-grid">
+          <div class="method-card fade-up">
+            <div class="card-glow-follow" aria-hidden="true"></div>
+            <div class="card-number">01</div>
+            <div class="card-icon"><i class="ph ph-buildings"></i></div>
+            <h3>Identificamos tu negocio</h3>
+            <p>Adaptamos el método a tu modelo, industria y etapa de crecimiento. Cada negocio requiere una lógica propia.</p>
+            <div class="card-arrow"><i class="ph ph-arrow-up-right"></i></div>
+          </div>
+          <div class="method-card fade-up delay-1">
+            <div class="card-glow-follow" aria-hidden="true"></div>
+            <div class="card-number">02</div>
+            <div class="card-icon"><i class="ph ph-trend-up"></i></div>
+            <h3>Definimos la estrategia</h3>
+            <p>Diseñamos la arquitectura de crecimiento: canales, mensajes y métricas que realmente impulsan resultados.</p>
+            <div class="card-arrow"><i class="ph ph-arrow-up-right"></i></div>
+          </div>
+          <div class="method-card fade-up delay-2">
+            <div class="card-glow-follow" aria-hidden="true"></div>
+            <div class="card-number">03</div>
+            <div class="card-icon"><i class="ph ph-lightning"></i></div>
+            <h3>Acordamos la inversión</h3>
+            <p>Ajustamos la intensidad del método según tus objetivos, recursos y velocidad de escala. Ni más ni menos.</p>
+            <div class="card-arrow"><i class="ph ph-arrow-up-right"></i></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICIOS -->
+    <section class="services section" id="services">
+      <div class="container">
+        <div class="section-header fade-up">
+          <p class="section-eyebrow">Método diseñado para crecer en serio</p>
+          <h2 class="section-title">Servicios diseñados<br>para crecer en serio</h2>
+          <p class="section-subtitle">Conocé las dos maneras de trabajar con nosotros.</p>
+        </div>
+        <div class="service-block fade-up">
+          <div class="service-block__header">
+            <div class="service-block__icon"><i class="ph ph-rocket-launch"></i></div>
+            <div>
+              <p class="service-block__eyebrow">Gestión integral</p>
+              <h3 class="service-block__title">Integral Marketing Leadership</h3>
+              <p class="service-block__desc">Nos integramos como tu equipo de marketing interno: investigamos el mercado, diseñamos la estrategia, producimos el contenido y optimizamos cada acción. Sin improvisación. Sin posteos aislados.</p>
+            </div>
+          </div>
+          <div class="service-block__tiers">
+            <div class="service-tier fade-up">
+              <div class="service-tier__dot service-tier__dot--basic"></div>
+              <div><p class="service-tier__name">Basic</p><p class="service-tier__desc">Base estratégica, contenido y presencia activa en redes.</p></div>
+            </div>
+            <div class="service-tier fade-up delay-1">
+              <div class="service-tier__dot service-tier__dot--standard"></div>
+              <div><p class="service-tier__name">Standard</p><p class="service-tier__desc">Más canales, ads, reportes semanales y optimización continua.</p></div>
+            </div>
+            <div class="service-tier fade-up delay-2">
+              <div class="service-tier__dot service-tier__dot--premium"></div>
+              <div><p class="service-tier__name">Premium</p><p class="service-tier__desc">Sistema completo con advisory, eventos y acceso directo al equipo.</p></div>
+            </div>
+          </div>
+          <a href="#plans" class="btn btn-outline service-block__cta">Ver planes <i class="ph ph-arrow-right"></i></a>
+        </div>
+        <div class="service-block service-block--alt fade-up">
+          <div class="service-block__header">
+            <div class="service-block__icon"><i class="ph ph-strategy"></i></div>
+            <div>
+              <p class="service-block__eyebrow">Servicios sueltos</p>
+              <h3 class="service-block__title">Strategic Advisory</h3>
+              <p class="service-block__desc">Consultoría estratégica puntual, auditorías de marca, workshops de posicionamiento y asesoramiento para equipos internos.</p>
+            </div>
+          </div>
+          <div class="service-advisory-grid">
+            <div class="advisory-item fade-up"><i class="ph ph-magnifying-glass"></i><span>Auditoría de marca</span></div>
+            <div class="advisory-item fade-up delay-1"><i class="ph ph-chart-line-up"></i><span>Estrategia de redes sociales</span></div>
+            <div class="advisory-item fade-up delay-2"><i class="ph ph-megaphone"></i><span>Redes sociales + Ads</span></div>
+            <div class="advisory-item fade-up delay-3"><i class="ph ph-users-three"></i><span>Workshop de equipo</span></div>
+            <div class="advisory-item fade-up"><i class="ph ph-globe"></i><span>Landing page con ads</span></div>
+            <div class="advisory-item fade-up delay-1"><i class="ph ph-hand-heart"></i><span>Consultoría de posicionamiento</span></div>
+          </div>
+          <a href="#cta" class="btn btn-outline service-block__cta">Consultar disponibilidad <i class="ph ph-arrow-right"></i></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section class="events-gallery section" id="events">
+      <div class="container">
+        <div class="section-header fade-up">
+          <p class="section-eyebrow">Networking & Brand Events</p>
+          <h2 class="section-title">Networking &amp; Brand Events</h2>
+          <p class="section-subtitle">Diseñamos experiencias que conectan personas, posicionan tu marca y generan oportunidades reales.<br>Promotoras · Catering · Cocktails · DJ Set · Ambientación.</p>
+        </div>
+        <div class="gallery-grid fade-up delay-1">
+          <div class="gallery-item" data-index="0">
+            <img src="assets/galeria1.jpg" alt="Evento 1">
+            <div class="gallery-overlay"><div class="gallery-overlay__content"><span class="gallery-overlay__label">Ver evento</span><i class="ph ph-arrow-up-right gallery-overlay__icon"></i></div></div>
+          </div>
+          <div class="gallery-item" data-index="1">
+            <img src="assets/galeria2.jpg" alt="Evento 2">
+            <div class="gallery-overlay"><div class="gallery-overlay__content"><span class="gallery-overlay__label">Ver evento</span><i class="ph ph-arrow-up-right gallery-overlay__icon"></i></div></div>
+          </div>
+          <div class="gallery-item" data-index="2">
+            <img src="assets/galeria3.jpg" alt="Evento 3">
+            <div class="gallery-overlay"><div class="gallery-overlay__content"><span class="gallery-overlay__label">Ver evento</span><i class="ph ph-arrow-up-right gallery-overlay__icon"></i></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PLANES -->
+    <section class="plans section" id="plans">
+      <div class="container">
+        <div class="section-header fade-up">
+          <p class="section-eyebrow">Planes de crecimiento</p>
+          <h2 class="section-title">Escalable según<br>tu etapa de negocio</h2>
+          <p class="section-subtitle">Sin contratos eternos. Sin sorpresas. Resultados medibles desde el mes uno.</p>
+        </div>
+        <div class="plans-grid">
+          <div class="pricing-card fade-up">
+            <div class="card-glow-follow" aria-hidden="true"></div>
+            <div class="pricing-plan-label">Basic</div>
+            <div class="pricing-tagline">Ideal para comenzar</div>
+            <p class="pricing-desc">Para marcas que están arrancando y necesitan una base sólida de contenido y estrategia.</p>
+            <ul class="pricing-features">
+              <li><i class="ph ph-check"></i> Calendario mensual de contenido</li>
+              <li><i class="ph ph-check"></i> 5 activaciones semanales</li>
+              <li><i class="ph ph-check"></i> Formatos mixtos (Stories · Posts · Reels)</li>
+              <li><i class="ph ph-check"></i> Gestión de 2 redes</li>
+              <li><i class="ph ph-check"></i> Reporte mensual</li>
+              <li class="disabled"><i class="ph ph-minus"></i> Ads Management</li>
+            </ul>
+            <a href="#cta" class="btn btn-outline btn-full">Consultar</a>
+          </div>
+          <div class="pricing-card pricing-card--featured fade-up delay-1">
+            <div class="card-glow-follow" aria-hidden="true"></div>
+            <div class="pricing-badge">Más elegido</div>
+            <div class="pricing-plan-label">Standard</div>
+            <div class="pricing-tagline">Para escalar</div>
+            <p class="pricing-desc">Para marcas en crecimiento que quieren escalar de forma sistemática y medible.</p>
+            <ul class="pricing-features">
+              <li><i class="ph ph-check"></i> Todo lo de Basic</li>
+              <li><i class="ph ph-check"></i> 7 activaciones semanales</li>
+              <li><i class="ph ph-check"></i> Formatos mixtos (Stories · Posts · Reels)</li>
+              <li><i class="ph ph-check"></i> Gestión de 4 redes</li>
+              <li><i class="ph ph-check"></i> Ads Management</li>
+              <li><i class="ph ph-check"></i> Reporte semanal</li>
+            </ul>
+            <a href="#cta" class="btn btn-primary btn-full">Agendar llamada</a>
+          </div>
+          <div class="pricing-card fade-up delay-2">
+            <div class="card-glow-follow" aria-hidden="true"></div>
+            <div class="pricing-plan-label">Premium</div>
+            <div class="pricing-tagline">Sistema completo</div>
+            <p class="pricing-desc">Para marcas que quieren el sistema completo con acceso directo al nuestro equipo.</p>
+            <ul class="pricing-features">
+              <li><i class="ph ph-check"></i> Todo lo de Standard</li>
+              <li><i class="ph ph-check"></i> 11 activaciones semanales</li>
+              <li><i class="ph ph-check"></i> Formatos mixtos (Stories · Posts · Reels)</li>
+              <li><i class="ph ph-check"></i> Advisory estratégico</li>
+              <li><i class="ph ph-check"></i> Producción de eventos</li>
+              <li><i class="ph ph-check"></i> Acceso directo al equipo</li>
+            </ul>
+            <a href="#cta" class="btn btn-outline btn-full">Consultar</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section section" id="cta">
+      <div class="container">
+        <div class="cta-card fade-up">
+          <div class="cta-glow" aria-hidden="true"></div>
+          <p class="section-eyebrow">Wanna be our Roomie?</p>
+          <h2 class="cta-title">Marketing digital<br><em>worldwide.</em></h2>
+          <p class="cta-subtitle">Reservá una conversación estratégica sobre cómo está tu marca y a dónde puede llegar.</p>
+          <div class="cta-actions">
+            <a href="https://wa.me/543364188484" target="_blank" rel="noopener" class="btn btn-primary btn-large">
+              <i class="ph ph-whatsapp-logo"></i> Reservar llamada
+            </a>
+            <a href="mailto:roomiesav@gmail.com" class="btn btn-ghost btn-large">roomiesav@gmail.com</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <img src="assets/roomies-logo-white.png" alt="Roomies" class="footer-logo">
+        <p>Marketing que construye sistemas,<br>no solo campañas.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <p class="footer-col__title">Navegación</p>
+          <a href="#method">Método</a>
+          <a href="#services">Servicios</a>
+          <a href="#events">Eventos</a>
+          <a href="#plans">Planes</a>
+        </div>
+        <div class="footer-col">
+          <p class="footer-col__title">Contacto</p>
+          <a href="mailto:roomiesav@gmail.com">roomiesav@gmail.com</a>
+          <a href="https://instagram.com/roomies" target="_blank" rel="noopener">@roomies</a>
+        </div>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <p>© <script>document.write(new Date().getFullYear())</script> ROOMIES Agency. Todos los derechos reservados.</p>
+      <p>Buenos Aires, Argentina</p>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
