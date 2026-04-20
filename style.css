@@ -149,7 +149,7 @@ body.custom-cursor-active * { cursor:none !important; }
   box-shadow: 0 1px 0 rgba(255,255,255,0.07);
 }
 .nav-container { display:flex; align-items:center; justify-content:space-between; gap:24px; }
-.logo img { height:30px; width:auto; transition:opacity 0.2s ease; }
+.logo img { height:48px; width:auto; transition:opacity 0.2s ease; }
 .logo:hover img { opacity:0.75; }
 .nav-links { display:flex; gap:36px; }
 .nav-link {
@@ -299,12 +299,10 @@ body.custom-cursor-active * { cursor:none !important; }
 .trust::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent 0%,#c00000 12%,#c87800 25%,#2d8a00 38%,#006e6e 50%,#004aab 65%,#3a0075 80%,transparent 100%); opacity:0.6; pointer-events:none; }
 .trust-header { text-align:center; margin-bottom:36px; }
 .trust-title { font-size:11px; font-weight:600; color:var(--text-3); letter-spacing:0.14em; text-transform:uppercase; }
-.trust-marquee { overflow:hidden; mask-image:linear-gradient(to right,transparent,black 15%,black 85%,transparent); -webkit-mask-image:linear-gradient(to right,transparent,black 15%,black 85%,transparent); }
-.trust-track { display:flex; align-items:center; gap:80px; width:max-content; animation:marqueeScroll 28s linear infinite; }
-.trust-track:hover { animation-play-state:paused; }
-.trust-track img { height:110px; width:auto; opacity:0.8; filter:grayscale(100%) brightness(4) contrast(0.6); transition:opacity 0.2s ease, filter 0.2s ease, transform 0.2s ease; flex-shrink:0; }
+.trust-marquee { overflow:visible; }
+.trust-track { display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:60px; width:100%; }
+.trust-track img { height:180px; width:auto; opacity:1.1; filter:grayscale(-50%) brightness(4) contrast(0.6); transition:opacity 0.2s ease, filter 0.2s ease, transform 0.2s ease; flex-shrink:0; }
 .trust-track img:hover { opacity:1; filter:grayscale(0%) brightness(1.2) drop-shadow(0 0 12px rgba(255,255,255,0.35)); transform:scale(1.08); }
-@keyframes marqueeScroll { from{transform:translateX(0);} to{transform:translateX(-50%);} }
 
 /* ── METHOD CARDS ── */
 .method-grid {
