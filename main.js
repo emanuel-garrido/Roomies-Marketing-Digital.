@@ -273,4 +273,24 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.key==="ArrowLeft")  { lbIdx=(lbIdx-1+gImgs.length)%gImgs.length; setLbImg(lbIdx); }
   });
 
+  /* ══════════════════════════════════════════
+     8. ADVISORY ACCORDION
+  ══════════════════════════════════════════ */
+  document.querySelectorAll(".advisory-acc-trigger").forEach(trigger => {
+    trigger.addEventListener("click", () => {
+      const item   = trigger.closest(".advisory-acc-item");
+      const isOpen = item.classList.contains("is-open");
+      // Cerrar todos
+      document.querySelectorAll(".advisory-acc-item.is-open").forEach(el => {
+        el.classList.remove("is-open");
+        el.querySelector(".advisory-acc-trigger").setAttribute("aria-expanded", "false");
+      });
+      // Abrir el clickeado si estaba cerrado
+      if (!isOpen) {
+        item.classList.add("is-open");
+        trigger.setAttribute("aria-expanded", "true");
+      }
+    });
+  });
+
 });
